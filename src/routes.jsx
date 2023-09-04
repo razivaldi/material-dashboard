@@ -8,6 +8,8 @@ import {
 } from "@heroicons/react/24/solid";
 import { Home, Profile, Tables, Notifications } from "@/pages/dashboard";
 import { SignIn, SignUp } from "@/pages/auth";
+import { SortableTable } from "./pages/dashboard/sortabletable";
+import { ProductEditScreen } from "./pages/dashboard/ProductEditScreen";
 
 const icon = {
   className: "w-5 h-5 text-inherit",
@@ -34,6 +36,18 @@ export const routes = [
         name: "tables",
         path: "/tables",
         element: <Tables />,
+      },
+      {
+        icon: <TableCellsIcon {...icon} />,
+        name: "sorttables",
+        path: "/sorttables",
+        element: <SortableTable/>,
+      },
+      {
+        icon: <TableCellsIcon {...icon} />,
+        name: "ProductForm",
+        path: "/editproduct",
+        element: <ProductEditScreen/>,
       },
       {
         icon: <BellIcon {...icon} />,
