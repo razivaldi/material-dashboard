@@ -20,7 +20,15 @@ import {
     Avatar,
     IconButton,
     Tooltip,
+    Alert,
   } from "@material-tailwind/react";
+
+  const showAlerts = {
+    "blue": true,
+    "green": true,
+    "orange": true,
+    "red": true,
+  };
    
   const TABS = [
     {
@@ -79,13 +87,13 @@ import {
       button: true,
       cell: (record) => <div>
         <IconButton variant="text" onClick={() => {
-          console.log(record);
+          alert(record.name)
         }}>
           <PencilIcon className="h-4 w-4" />
         </IconButton>
         
         <IconButton variant="text" onClick={() => {
-          console.log(record);
+          alert(record.job);
         }}>
           <TrashIcon className="h-4 w-4" />
         </IconButton>
