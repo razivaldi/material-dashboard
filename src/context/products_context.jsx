@@ -10,7 +10,14 @@ import {
   GET_SINGLE_PRODUCT_BEGIN,
   GET_SINGLE_PRODUCT_SUCCESS,
   GET_SINGLE_PRODUCT_ERROR,
+  DELETE_PRODUCT_BEGIN,
+  DELETE_PRODUCT_SUCCESS,
+  DELETE_PRODUCT_ERROR,
+  UPDATE_PRODUCT_BEGIN,
+  UPDATE_PRODUCT_SUCCESS,
+  UPDATE_PRODUCT_ERROR
 } from '../components/actions'
+import { redirect, useNavigate } from 'react-router-dom'
 
 const initialState = {
   isSidebarOpen: false,
@@ -25,13 +32,13 @@ const initialState = {
 
 const ProductsContext = React.createContext()
 
-export const products_url = 'https://63cdf885d2e8c29a9bced636.mockapi.io/api/v1/products'
-
-export const single_product_url = 'https://63cdf885d2e8c29a9bced636.mockapi.io/api/v1/products/'
+export const products_url =  `${import.meta.env.VITE_BASE_URL}/products`
+export const single_product_url = import.meta.env.VITE_BASE_URL
 
 export const ProductsProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState)
-
+  const [selectedRows, setSelectedRows] = React.useState(false);
+  const navigate = useNavigate()
   const openSidebar = () => {
     dispatch({ type: SIDEBAR_OPEN })
   }
@@ -39,13 +46,12 @@ export const ProductsProvider = ({ children }) => {
     dispatch({ type: SIDEBAR_CLOSE })
   }
 
-  const fetchProducts = async (products_url) => {
+  const fetchProducts = async () => {
     
     dispatch({ type: GET_PRODUCTS_BEGIN })
     try {
-      const response = await axios.get(products_url)
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/products`)
       const products = response.data
-      console.log(products)
       dispatch({ type: GET_PRODUCTS_SUCCESS, payload: products })
     } catch (error) {
       console.log(error)
@@ -53,16 +59,41 @@ export const ProductsProvider = ({ children }) => {
     }
   }
 
-  const fetchSingleProduct = async (single_product_url) => {
+  const fetchSingleProduct = async () => {
     dispatch({ type: GET_SINGLE_PRODUCT_BEGIN })
     try {
-      const response = await axios.get(single_product_url)
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}`)
       const singleProduct = response.data
       dispatch({ type: GET_SINGLE_PRODUCT_SUCCESS, payload: singleProduct })
     } catch (error) {
       dispatch({ type: GET_SINGLE_PRODUCT_ERROR })
     }
   }
+
+  const deleteSingleProduct = async (id) => {
+    dispatch({ type: DELETE_PRODUCT_BEGIN })
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/delete-product`,{productId : id})
+      const products = response.data
+      dispatch({ type: DELETE_PRODUCT_SUCCESS, payload: products })
+    } catch (error) {
+      dispatch({ type: DELETE_PRODUCT_ERROR })
+    }
+  }
+
+  const updateSingleProduct = async (formData) => {
+    dispatch({ type: UPDATE_PRODUCT_BEGIN })
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/update-product`,formData)
+      const products = response.data
+      dispatch({ type: UPDATE_PRODUCT_SUCCESS, payload: products })
+      alert('Product updated successfully')
+    } catch (error) {
+      dispatch({ type: UPDATE_PRODUCT_ERROR })
+    }
+  }
+
+
 
   useEffect(() => {
     fetchProducts(products_url)
@@ -75,6 +106,10 @@ export const ProductsProvider = ({ children }) => {
         openSidebar,
         closeSidebar,
         fetchSingleProduct,
+        updateSingleProduct,
+        deleteSingleProduct, 
+        selectedRows,
+        setSelectedRows
       }}
     >
       {children}

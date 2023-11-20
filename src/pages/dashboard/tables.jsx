@@ -1,117 +1,161 @@
+import DataTable from "react-data-table-component";
+import React, { useEffect } from "react";
+import {
+  MagnifyingGlassIcon,
+  ChevronUpDownIcon,
+} from "@heroicons/react/24/outline";
+import { PencilIcon, UserPlusIcon, TrashIcon } from "@heroicons/react/24/solid";
 import {
   Card,
   CardHeader,
-  CardBody,
+  Input,
   Typography,
-  Avatar,
+  Button,
+  CardBody,
   Chip,
+  CardFooter,
+  Tabs,
+  TabsHeader,
+  Tab,
+  Avatar,
+  IconButton,
   Tooltip,
-  Progress,
+  Alert,
+  Spinner,
 } from "@material-tailwind/react";
-import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
-import { authorsTableData, projectsTableData } from "@/data";
 import { useProductsContext } from "@/context/products_context";
-
+import Modal from "../../components/modal";
+import { useNavigate } from "react-router-dom";
 
 export function Tables() {
-  const { products } = useProductsContext()
+  const { products, products_loading ,setSelectedRows, selectedRows, deleteSingleProduct } =
+    useProductsContext();
+  const [toggledClearRows, setToggleClearRows] = React.useState(false);
+  const [showModal, setShowModal] = React.useState(false);
+  const navigate = useNavigate();
+
+  const handleDelete = (id) => {
+    deleteSingleProduct(id);
+  }
+  const TABLE_HEAD = [
+    {
+      name: "Name",
+      selector: (row) => row.name,
+      sortable: true,
+      cell: (record) => (
+        <div className="flex items-center gap-3">
+          <Avatar
+            src={`http://localhost:8000/${record.imageUrl[0]}`}
+            alt={name}
+            size="sm"
+          />
+          <div className="flex flex-col">
+            <Typography
+              variant="small"
+              color="blue-gray"
+              className="font-normal"
+            >
+              {record.title}
+            </Typography>
+            <Typography
+              variant="small"
+              color="blue-gray"
+              className="font-normal opacity-70"
+            >
+              {record.email}
+            </Typography>
+          </div>
+        </div>
+      ),
+    },
+    {
+      name: "Price",
+      selector: (row) => {
+        return new Intl.NumberFormat("id-ID", {
+          style: "currency",
+          currency: "IDR",
+        }).format(row.price);
+      },
+      sortable: true,
+    },
+    {
+      name: "Colors",
+      selector: (row) => row.colors,
+      sortable: true,
+    },
+    {
+      name: "Featured",
+      selector: (row) => row.featured,
+      sortable: true,
+      cell: (record) => (
+        <div className="flex items-center gap-3">
+          <Chip
+            variant="gradient"
+            color={record.featured ? "green" : "blue-gray"}
+            value={record.featured ? "featured" : "-"}
+            className="py-0.5 px-2 text-[11px] font-medium"
+          />
+        </div>
+      ),
+    },
+    {
+      name: "Action",
+      button: true,
+      cell: (record) => (
+        <div>
+          <IconButton
+            variant="text"
+            onClick={() => {
+              alert(record._id);
+              navigate(`/dashboard/editproduct`,{state: {productId: record._id}} );
+            }}
+          >
+            <PencilIcon className="h-4 w-4" />
+          </IconButton>
+
+          <IconButton
+            variant="text"
+            onClick={() => {
+              setShowModal(true)
+              setSelectedRows(record)
+            }}
+          >
+            <TrashIcon className="h-4 w-4" />
+          </IconButton>
+        </div>
+      ),
+    },
+  ];
+
+  const handleChange = ({ selectedRows }) => {
+    setSelectedRows(selectedRows);
+    console.log(selectedRows);
+  };
+
+  const handleClearRows = () => {
+    setToggleClearRows(!toggledClearRows);
+  };
 
   return (
-    <div className="mt-12 mb-8 flex flex-col gap-12">
-      <Card>
-        <CardHeader variant="gradient" color="blue" className="mb-8 p-6">
-          <Typography variant="h6" color="white">
-            List Products
-          </Typography>
-        </CardHeader>
-        <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
-          <table className="w-full min-w-[640px] table-auto">
-            <thead>
-              <tr>
-                {["Name", "Price", "Category", "Featured", ""].map((el) => (
-                  <th
-                    key={el}
-                    className="border-b border-blue-gray-50 py-3 px-5 text-left"
-                  >
-                    <Typography
-                      variant="small"
-                      className="text-[11px] font-bold uppercase text-blue-gray-400"
-                    >
-                      {el}
-                    </Typography>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-            {products.map(
-                ({ image, name, price, featured, category, colors }, key) => {
-                  const className = `py-3 px-5 ${
-                    key === products.length - 1
-                      ? ""
-                      : "border-b border-blue-gray-50"
-                  }`;
+    <Card className="h-full w-full">
+      <div className="ml-4 flex shrink-0 flex-col gap-2 sm:flex-row">
+        <Button
+          onClick={handleClearRows}
+          className="flex items-center gap-3"
+          size="sm"
+        >
+          Clear Selected Rows
+        </Button>
+      </div>
 
-                  return (
-                    <tr key={name}>
-                      <td className={className}>
-                        <div className="flex items-center gap-4">
-                          <Avatar src={image} alt={name} size="sm" />
-                          <div>
-                            <Typography
-                              variant="small"
-                              color="blue-gray"
-                              className="font-semibold"
-                            >
-                              {name}
-                            </Typography>
-                            <Typography className="text-xs font-normal text-blue-gray-500">
-                              {category}
-                            </Typography>
-                          </div>
-                        </div>
-                      </td>
-                      <td className={className}>
-                        <Typography className="text-xs font-semibold text-blue-gray-600">
-                          {featured}
-                        </Typography>
-                        <Typography className="text-xs font-normal text-blue-gray-500">
-                          {price}
-                        </Typography>
-                      </td>
-                      <td className={className}>
-                        <Chip
-                          variant="gradient"
-                          color={featured ? "green" : "blue-gray"}
-                          value={featured ? "featured" : "-"}
-                          className="py-0.5 px-2 text-[11px] font-medium"
-                        />
-                      </td>
-                      <td className={className}>
-                        <Typography className="text-xs font-semibold text-blue-gray-600">
-                          {colors}
-                        </Typography>
-                      </td>
-                      <td className={className}>
-                        <Typography
-                          as="a"
-                          href="#"
-                          className="text-xs font-semibold text-blue-gray-600"
-                        >
-                          Edit
-                        </Typography>
-                      </td>
-                    </tr>
-                  );
-                }
-              )}
-            </tbody>
-          </table>
-        </CardBody>
-      </Card>
-      
-    </div>
+      <DataTable
+        columns={TABLE_HEAD}
+        data={products}
+        selectableRows
+        onSelectedRowsChange={handleChange}
+        clearSelectedRows={toggledClearRows}
+      />
+      <Modal showModal={showModal} setShowModal={setShowModal} item={selectedRows} handleDelete={handleDelete}/>
+    </Card>
   );
 }
-
-export default Tables;

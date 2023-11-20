@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Card,
   CardHeader,
@@ -9,8 +9,22 @@ import {
   Button,
   Typography,
 } from "@material-tailwind/react";
+import { useState } from "react";
+import { useAuthContext } from "@/context/auth_context";
 
 export function SignIn() {
+
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const { login } = useAuthContext()
+  const navigate = useNavigate()
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    await login(email, password)
+    navigate('/dashboard/home')
+  }
+
   return (
     <>
       <img
@@ -30,14 +44,14 @@ export function SignIn() {
             </Typography>
           </CardHeader>
           <CardBody className="flex flex-col gap-4">
-            <Input type="email" label="Email" size="lg" />
-            <Input type="password" label="Password" size="lg" />
+            <Input type="email" label="Email" size="lg" onChange={(e) => setEmail(e.target.value)}/>
+            <Input type="password" label="Password" size="lg" onChange={(e) => setPassword(e.target.value)} />
             <div className="-ml-2.5">
               <Checkbox label="Remember Me" />
             </div>
           </CardBody>
           <CardFooter className="pt-0">
-            <Button variant="gradient" fullWidth>
+            <Button variant="gradient" fullWidth onClick={handleSubmit}>
               Sign In
             </Button>
             <Typography variant="small" className="mt-6 flex justify-center">

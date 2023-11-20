@@ -17,15 +17,21 @@ import { ThemeProvider } from "@material-tailwind/react";
 import { MaterialTailwindControllerProvider } from "@/context";
 import { ProductsProvider } from "./context/products_context";
 import "../public/css/tailwind.css";
+import { UsersProvider } from "./context/users_context";
+import { AuthProvider } from "./context/auth_context";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <ThemeProvider>
         <MaterialTailwindControllerProvider>
-          <ProductsProvider>
-          <App />
-          </ProductsProvider>
+          <AuthProvider>
+            <ProductsProvider>
+              <UsersProvider>
+                <App />
+              </UsersProvider>
+            </ProductsProvider>
+          </AuthProvider>
         </MaterialTailwindControllerProvider>
       </ThemeProvider>
     </BrowserRouter>

@@ -9,8 +9,20 @@ import {
   Button,
   Typography,
 } from "@material-tailwind/react";
+import { useState } from "react";
+import { useAuthContext } from "@/context/auth_context";
 
 export function SignUp() {
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const {register} = useAuthContext()
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    await register(name, email, password)
+  }
+
   return (
     <>
       <img
@@ -30,15 +42,15 @@ export function SignUp() {
             </Typography>
           </CardHeader>
           <CardBody className="flex flex-col gap-4">
-            <Input label="Name" size="lg" />
-            <Input type="email" label="Email" size="lg" />
-            <Input type="password" label="Password" size="lg" />
+            <Input label="Name" size="lg" onChange={(e) => setName(e.target.value)}/>
+            <Input type="email" label="Email" size="lg" onChange={(e) => setEmail(e.target.value)}/>
+            <Input type="password" label="Password" size="lg" onChange={(e) => setPassword(e.target.value)}/>
             <div className="-ml-2.5">
               <Checkbox label="I agree the Terms and Conditions" />
             </div>
           </CardBody>
           <CardFooter className="pt-0">
-            <Button variant="gradient" fullWidth>
+            <Button variant="gradient" fullWidth onClick={handleSubmit}>
               Sign Up
             </Button>
             <Typography variant="small" className="mt-6 flex justify-center">
