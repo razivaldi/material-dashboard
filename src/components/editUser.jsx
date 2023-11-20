@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Dialog,
@@ -14,16 +14,22 @@ import {
 } from "@material-tailwind/react";
 import { useUsersContext } from "@/context/users_context";
 
-export function UserEdit({ handleOpen, setOpen, open, item }) {
+export function UserEdit({ handleOpen, setOpen, open, item}) {
   const { updateUser } = useUsersContext();
   const [data, setData] = useState({
-    userId : item._id,
+    userId : "",
     newName: "",
     newRole: "",
     newEmail: "",
   });
 
-  console.log(data);
+  useEffect(() => {
+    setData({
+      ...data,
+      userId: item._id,
+    })
+  },[item])
+  console.log(data)
 
   return (
     <>

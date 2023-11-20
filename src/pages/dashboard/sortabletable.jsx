@@ -110,8 +110,9 @@ export function SortableTable() {
           <IconButton
             variant="text"
             onClick={() => {
-              handleOpen();
               setSelectedRows(record);
+              handleOpen();
+              console.log(record);
             }}
           >
             <PencilIcon className="h-4 w-4" />
@@ -141,7 +142,6 @@ export function SortableTable() {
     setToggleClearRows(!toggledClearRows);
   };
 
-  console.log(users_loading);
 
   return (
     <Card className="h-full w-full">

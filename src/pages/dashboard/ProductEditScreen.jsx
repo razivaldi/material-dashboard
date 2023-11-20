@@ -15,7 +15,7 @@ import { useLocation } from "react-router-dom";
 
 export function ProductEditScreen() {
   const {updateSingleProduct} = useProductsContext()
-  const {state} = useLocation()
+  const {state} = useLocation('')
   const [file, setFile] = useState();
   const [data, setData] = useState({
     productId : state?.productId ,

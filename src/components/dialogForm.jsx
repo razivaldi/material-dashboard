@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Button,
   Dialog,
@@ -10,10 +10,18 @@ import {
   Input,
   Checkbox,
 } from "@material-tailwind/react";
+import { useAuthContext } from "@/context/auth_context";
 
 export function DialogForm() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen((cur) => !cur);
+  const { register } = useAuthContext();
+  const [data, setData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+  console.log(data);
 
   return (
     <>
@@ -30,23 +38,42 @@ export function DialogForm() {
               Add User
             </Typography>
             <Typography className="-mb-2" variant="h6">
-            Name
+              Name
             </Typography>
-            <Input label="Name" size="lg" />
+            <Input
+              label="Name"
+              size="lg"
+              onChange={(e) => setData({ ...data, name: e.target.value })}
+            />
             <Typography className="-mb-2" variant="h6">
-            Email
+              Email
             </Typography>
-            <Input label="Email" size="lg" />
+            <Input
+              label="Email"
+              size="lg"
+              onChange={(e) => setData({ ...data, email: e.target.value })}
+            />
             <Typography className="-mb-2" variant="h6">
-            Password
+              Password
             </Typography>
-            <Input label="Password" size="lg" />
+            <Input
+              label="Password"
+              size="lg"
+              onChange={(e) => setData({ ...data, password: e.target.value })}
+            />
             {/* <div className="-ml-2.5 -mt-3">
               <Checkbox label="Remember Me" />
             </div> */}
           </CardBody>
           <CardFooter className="pt-0">
-            <Button variant="gradient" onClick={handleOpen} fullWidth>
+            <Button
+              variant="gradient"
+              onClick={() => {
+                handleOpen;
+                register(data);
+              }}
+              fullWidth
+            >
               Create User
             </Button>
           </CardFooter>

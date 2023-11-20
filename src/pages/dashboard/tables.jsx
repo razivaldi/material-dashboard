@@ -80,7 +80,7 @@ export function Tables() {
     },
     {
       name: "Colors",
-      selector: (row) => row.colors,
+      selector: (row) => row.colors.join(", "),
       sortable: true,
     },
     {

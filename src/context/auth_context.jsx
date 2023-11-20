@@ -42,15 +42,13 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: "USER_LOGOUT" });
   };
 
-  const register = (name, email, password) => {
+  const register = (data) => {
     dispatch({ type: "USER_REGISTER_REQUEST" });
-
-    const userData = { name: name, email: email, password: password };
-
      axios
-      .post(`http://localhost:8000/auth/signup`, userData)
+      .post(`http://localhost:8000/auth/signup`, data)
       .then((resp) => {
         dispatch({ type: "USER_REGISTER_SUCCESS", payload: resp.data.message });
+        alert(resp.data.message)
       })
       .catch((err) => {
         dispatch({

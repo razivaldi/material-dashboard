@@ -13,15 +13,19 @@ import { useState } from "react";
 import { useAuthContext } from "@/context/auth_context";
 
 export function SignUp() {
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const [data, setData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  })
   const {register} = useAuthContext()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    await register(name, email, password)
+    await register(data)
   }
+
+  console.log(data)
 
   return (
     <>
@@ -42,9 +46,9 @@ export function SignUp() {
             </Typography>
           </CardHeader>
           <CardBody className="flex flex-col gap-4">
-            <Input label="Name" size="lg" onChange={(e) => setName(e.target.value)}/>
-            <Input type="email" label="Email" size="lg" onChange={(e) => setEmail(e.target.value)}/>
-            <Input type="password" label="Password" size="lg" onChange={(e) => setPassword(e.target.value)}/>
+            <Input label="Name" size="lg" onChange={(e) => setData({...data, name: e.target.value})}/>
+            <Input type="email" label="Email" size="lg" onChange={(e) => setData({...data, email: e.target.value})}/>
+            <Input type="password" label="Password" size="lg" onChange={(e) => setData({...data, password: e.target.value})}/>
             <div className="-ml-2.5">
               <Checkbox label="I agree the Terms and Conditions" />
             </div>
