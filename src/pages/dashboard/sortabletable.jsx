@@ -21,12 +21,13 @@ import {
   IconButton,
   Tooltip,
   Alert,
-  Spinner
+  Spinner,
 } from "@material-tailwind/react";
 import { useUsersContext } from "@/context/users_context";
 import Modal from "@/components/modal";
 import { DialogForm } from "@/components/dialogForm";
 import { UserEdit } from "@/components/editUser";
+import { useAuthContext } from "@/context/auth_context";
 
 const showAlerts = {
   blue: true,
@@ -51,7 +52,9 @@ const TABS = [
 ];
 
 export function SortableTable() {
-  const { users, setSelectedRows, selectedRows, deleteUser, users_loading } = useUsersContext();
+  const { userState } = useAuthContext();
+  const { users, setSelectedRows, selectedRows, deleteUser, users_loading } =
+    useUsersContext();
 
   const handleOpen = () => setOpen((cur) => !cur);
   const [open, setOpen] = React.useState(false);
@@ -60,7 +63,7 @@ export function SortableTable() {
 
   const handleDelete = (id) => {
     deleteUser(id);
-  }
+  };
 
   const TABLE_HEAD = [
     {
@@ -132,7 +135,6 @@ export function SortableTable() {
     },
   ];
 
-
   const handleChange = ({ selectedRows }) => {
     setSelectedRows(selectedRows);
     console.log(selectedRows);
@@ -142,32 +144,46 @@ export function SortableTable() {
     setToggleClearRows(!toggledClearRows);
   };
 
-
   return (
-    <Card className="h-full w-full">
-      <div className="ml-4 flex shrink-0 flex-col gap-2 sm:flex-row">
-        <Button
-          onClick={handleClearRows}
-          className="flex items-center gap-3"
-          size="sm"
-        >
-          Clear Selected Rows
-        </Button>
-        <DialogForm />
-        <div className="md:absolute md:right-4">
-          <Input label="Search" size="sm" />
-        </div>
-      </div>
-      <DataTable
-        columns={TABLE_HEAD}
-        data={users}
-        selectableRows
-        onSelectedRowsChange={handleChange}
-        clearSelectedRows={toggledClearRows}
-      />
-      <UserEdit handleOpen={handleOpen} open={open} setOpen={setOpen} item={selectedRows} />
-      <Modal showModal={showModal} setShowModal={setShowModal} item={selectedRows} handleDelete={handleDelete} />
-    </Card>
+    <>
+      {!userState.role && <Card className="h-full w-full text-center"> Please Login</Card>}
+      {userState.role === "admin" && (
+        <Card className="h-full w-full">
+          <div className="ml-4 flex shrink-0 flex-col gap-2 sm:flex-row">
+            <Button
+              onClick={handleClearRows}
+              className="flex items-center gap-3"
+              size="sm"
+            >
+              Clear Selected Rows
+            </Button>
+            <DialogForm />
+            <div className="md:absolute md:right-4">
+              <Input label="Search" size="sm" />
+            </div>
+          </div>
+          <DataTable
+            columns={TABLE_HEAD}
+            data={users}
+            selectableRows
+            onSelectedRowsChange={handleChange}
+            clearSelectedRows={toggledClearRows}
+          />
+          <UserEdit
+            handleOpen={handleOpen}
+            open={open}
+            setOpen={setOpen}
+            item={selectedRows}
+          />
+          <Modal
+            showModal={showModal}
+            setShowModal={setShowModal}
+            item={selectedRows}
+            handleDelete={handleDelete}
+            title={"Account"}
+          />
+        </Card>
+      )}
+    </>
   );
 }
-  

@@ -13,6 +13,12 @@ import {
   DELETE_PRODUCT_BEGIN,
   DELETE_PRODUCT_SUCCESS,
   DELETE_PRODUCT_ERROR,
+  ADD_PRODUCT_BEGIN,
+  ADD_PRODUCT_SUCCESS,
+  ADD_PRODUCT_ERROR, 
+  DELETE_PRODUCTS_BEGIN,
+  DELETE_PRODUCTS_ERROR,
+  DELETE_PRODUCTS_SUCCESS
 } from "../components/actions";
 
 const products_reducer = (state, action) => {
@@ -110,6 +116,54 @@ const products_reducer = (state, action) => {
     };
   }
 
+  if (action.type ===  ADD_PRODUCT_BEGIN) {
+    return {
+      ...state,
+      products_loading: true,
+      products_error: false,
+    };
+  }
+
+  if (action.type === ADD_PRODUCT_SUCCESS) {
+    return {
+      ...state,
+      products_loading: false,
+      products: action.payload,
+    };
+  }
+  
+  if (action.type === ADD_PRODUCT_ERROR) {
+    return {
+      ...state,
+      products_loading: false,
+      products_error: true,
+    };
+  }
+
+  if (action.type === DELETE_PRODUCTS_BEGIN) {
+    return {
+      ...state,
+      products_loading: true,
+      products_error: false,
+    };
+  }
+
+  if (action.type === DELETE_PRODUCTS_SUCCESS) {
+    return {
+      ...state,
+      products_loading: false,
+      products: action.payload,
+    };
+  }
+
+  if (action.type === DELETE_PRODUCTS_ERROR) {
+    return {
+      ...state,
+      products_loading: false,
+      products_error: true,
+    };
+  }
+  
   throw new Error(`No Matching "${action.type}" - action type`);
 };
 

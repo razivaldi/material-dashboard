@@ -2,35 +2,30 @@ import { useProductsContext } from "@/context/products_context";
 import {
   Card,
   Input,
-  Checkbox,
   Button,
   Typography,
   Textarea,
   Select,
   Option,
+  Checkbox,
 } from "@material-tailwind/react";
 
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
 
-export function ProductEditScreen() {
-  const { updateSingleProduct } = useProductsContext();
-  const { state } = useLocation("");
+export function AddProduct() {
+  const { addProduct } = useProductsContext();
   const [file, setFile] = useState(null);
   const [data, setData] = useState({
-    productId: state?.product._id || "",
-    title: state?.product.title || "",
-    price: state?.product.price || "",
-    description: state?.product.description || "",
-    category: state?.product.category || "",
-    stock: state?.product.stock || "",
-    shipping: state?.product.shipping || false,
-    featured: state?.product.featured || false,
-    colors: state?.product.colors || [],
-    imageUrl:state?.product.imageUrl || '',
+    title: "",
+    price: "",
+    description: "",
+    category: "",
+    stock: "",
+    shipping: false,
+    featured: false,
+    colors: [],
+    imageUrl: "",
   });
-
-  console.log("porduct", state);
 
   function handleChange(e) {
     console.log("target file", e.target.files[0]);
@@ -45,7 +40,6 @@ export function ProductEditScreen() {
     formData.append("price", data.price);
     formData.append("description", data.description);
     formData.append("category", data.category);
-    formData.append("productId", data.productId);
     formData.append("stock", data.stock);
     formData.append("shipping", data.shipping);
     formData.append("featured", data.featured);
@@ -54,14 +48,14 @@ export function ProductEditScreen() {
     if (file) {
       formData.append("imageUrl", data.imageUrl);
     }
-    updateSingleProduct(formData);
+    addProduct(formData);
   }
   console.log("data", data);
   console.log("file", file);
 
   return (
     <>
-     <Card color="transparent" shadow={false}>
+      <Card color="transparent" shadow={false}>
         <Typography variant="h4" color="blue-gray">
           Add Product
         </Typography>

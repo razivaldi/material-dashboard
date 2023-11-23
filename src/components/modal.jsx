@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Modal({showModal, setShowModal, item, handleDelete}) {
+export default function Modal({showModal, setShowModal, item, handleDelete, title}) {
   return (
     <>
       {showModal ? (
@@ -28,7 +28,10 @@ export default function Modal({showModal, setShowModal, item, handleDelete}) {
                 {/*body*/}
                 <div className="relative p-6 flex-auto">
                   <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
-                    are you sure to delete this Account?
+                    Are you sure to delete this {title}?
+                  </p>
+                  <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
+                    This process <span className="font-semibold">cannot</span> be undone
                   </p>
                 </div>
                 {/*footer*/}
@@ -41,14 +44,14 @@ export default function Modal({showModal, setShowModal, item, handleDelete}) {
                     Close
                   </button>
                   <button
-                    className="bg-blue-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    className="bg-red-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                     type="button"
                     onClick={() => {
                       setShowModal(false)
                       handleDelete(item._id)
                     }}
                   >
-                    Save Changes
+                    DELETE
                   </button>
                 </div>
               </div>

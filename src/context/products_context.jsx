@@ -15,9 +15,15 @@ import {
   DELETE_PRODUCT_ERROR,
   UPDATE_PRODUCT_BEGIN,
   UPDATE_PRODUCT_SUCCESS,
-  UPDATE_PRODUCT_ERROR
+  UPDATE_PRODUCT_ERROR, 
+  ADD_PRODUCT_BEGIN,
+  ADD_PRODUCT_SUCCESS,
+  ADD_PRODUCT_ERROR, 
+  DELETE_PRODUCTS_BEGIN,
+  DELETE_PRODUCTS_SUCCESS,
+  DELETE_PRODUCTS_ERROR
 } from '../components/actions'
-import { redirect, useNavigate } from 'react-router-dom'
+import { Navigate, redirect, useNavigate } from 'react-router-dom'
 
 const initialState = {
   isSidebarOpen: false,
@@ -69,6 +75,20 @@ export const ProductsProvider = ({ children }) => {
       dispatch({ type: GET_SINGLE_PRODUCT_ERROR })
     }
   }
+  
+  const deleteSomeProducts = async (data) => {
+    console.log(data)
+    dispatch({ type: DELETE_PRODUCTS_BEGIN })
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/delete-some-products`,{productId: data})
+      const products = response.data
+      dispatch({ type: DELETE_PRODUCTS_SUCCESS, payload: products })
+      await fetchProducts()
+      navigate('/dashboard/tables')
+    } catch (error) {
+      dispatch({ type: DELETE_PRODUCTS_ERROR })
+    }
+  }
 
   const deleteSingleProduct = async (id) => {
     dispatch({ type: DELETE_PRODUCT_BEGIN })
@@ -76,6 +96,8 @@ export const ProductsProvider = ({ children }) => {
       const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/delete-product`,{productId : id})
       const products = response.data
       dispatch({ type: DELETE_PRODUCT_SUCCESS, payload: products })
+      await fetchProducts()
+      navigate('/dashboard/tables')
     } catch (error) {
       dispatch({ type: DELETE_PRODUCT_ERROR })
     }
@@ -84,15 +106,38 @@ export const ProductsProvider = ({ children }) => {
   const updateSingleProduct = async (formData) => {
     dispatch({ type: UPDATE_PRODUCT_BEGIN })
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/update-product`,formData)
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/update-product`,formData,{
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        }
+      })
       const products = response.data
       dispatch({ type: UPDATE_PRODUCT_SUCCESS, payload: products })
-      alert('Product updated successfully')
+      await fetchProducts()
+      navigate('/dashboard/tables')
     } catch (error) {
       dispatch({ type: UPDATE_PRODUCT_ERROR })
     }
   }
 
+  const addProduct = async (formData) => {
+    const token = JSON.parse(localStorage.getItem("userInfo")).token
+    dispatch({ type: ADD_PRODUCT_BEGIN })
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_USER_URL}/add-product`,formData,{
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: "Bearer " + token
+        }
+      })
+      const product = response.data
+      dispatch({ type: ADD_PRODUCT_SUCCESS, payload: product })
+      await fetchProducts()
+      alert("Product added successfully")
+    } catch (error) {
+      dispatch({ type: ADD_PRODUCT_ERROR })
+    }
+  }
 
 
   useEffect(() => {
@@ -109,7 +154,9 @@ export const ProductsProvider = ({ children }) => {
         updateSingleProduct,
         deleteSingleProduct, 
         selectedRows,
-        setSelectedRows
+        setSelectedRows,
+        addProduct, 
+        deleteSomeProducts
       }}
     >
       {children}

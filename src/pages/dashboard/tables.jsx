@@ -26,17 +26,24 @@ import {
 import { useProductsContext } from "@/context/products_context";
 import Modal from "../../components/modal";
 import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "@/context/auth_context";
 
 export function Tables() {
-  const { products, products_loading ,setSelectedRows, selectedRows, deleteSingleProduct } =
-    useProductsContext();
+  const { userState } = useAuthContext();
+  const {
+    products,
+    setSelectedRows,
+    deleteSomeProducts,
+    selectedRows,
+    deleteSingleProduct,
+  } = useProductsContext();
   const [toggledClearRows, setToggleClearRows] = React.useState(false);
   const [showModal, setShowModal] = React.useState(false);
   const navigate = useNavigate();
 
   const handleDelete = (id) => {
     deleteSingleProduct(id);
-  }
+  };
   const TABLE_HEAD = [
     {
       name: "Name",
@@ -80,7 +87,16 @@ export function Tables() {
     },
     {
       name: "Colors",
-      selector: (row) => row.colors.join(", "),
+      selector: (row) =>
+        row.colors.map((c) => {
+          return (
+            <div
+              key={c}
+              style={{ backgroundColor: c }}
+              className="m-1 inline-flex h-5 w-5 rounded-full border border-black"
+            ></div>
+          );
+        }),
       sortable: true,
     },
     {
@@ -106,8 +122,10 @@ export function Tables() {
           <IconButton
             variant="text"
             onClick={() => {
-              alert(record._id);
-              navigate(`/dashboard/editproduct`,{state: {productId: record._id}} );
+              alert(record);
+              navigate(`/dashboard/editproduct`, {
+                state: { product: record },
+              });
             }}
           >
             <PencilIcon className="h-4 w-4" />
@@ -116,8 +134,8 @@ export function Tables() {
           <IconButton
             variant="text"
             onClick={() => {
-              setShowModal(true)
-              setSelectedRows(record)
+              setShowModal(true);
+              setSelectedRows(record);
             }}
           >
             <TrashIcon className="h-4 w-4" />
@@ -136,26 +154,51 @@ export function Tables() {
     setToggleClearRows(!toggledClearRows);
   };
 
-  return (
-    <Card className="h-full w-full">
-      <div className="ml-4 flex shrink-0 flex-col gap-2 sm:flex-row">
-        <Button
-          onClick={handleClearRows}
-          className="flex items-center gap-3"
-          size="sm"
-        >
-          Clear Selected Rows
-        </Button>
-      </div>
+  const handleDeleteRows = () => {
+    const productId = selectedRows.map((row) => row._id);
+    deleteSomeProducts(productId);
+    console.log(productId);
+  };
+  console.log(userState);
 
-      <DataTable
-        columns={TABLE_HEAD}
-        data={products}
-        selectableRows
-        onSelectedRowsChange={handleChange}
-        clearSelectedRows={toggledClearRows}
-      />
-      <Modal showModal={showModal} setShowModal={setShowModal} item={selectedRows} handleDelete={handleDelete}/>
-    </Card>
+  return (
+    <>
+      {!userState.role && <Card className="h-full w-full text-center">Please Login</Card>}
+      {userState.role === "admin" && (
+        <Card className="h-full w-full">
+          <div className="ml-4 flex shrink-0 flex-col gap-2 sm:flex-row">
+            <Button
+              onClick={handleClearRows}
+              className="flex items-center gap-3"
+              size="sm"
+            >
+              Clear Selected Rows
+            </Button>
+            <Button
+              onClick={handleDeleteRows}
+              className="flex items-center gap-3"
+              size="sm"
+            >
+              Delete Selected Rows
+            </Button>
+          </div>
+
+          <DataTable
+            columns={TABLE_HEAD}
+            data={products}
+            selectableRows
+            onSelectedRowsChange={handleChange}
+            clearSelectedRows={toggledClearRows}
+          />
+          <Modal
+            showModal={showModal}
+            setShowModal={setShowModal}
+            item={selectedRows}
+            handleDelete={handleDelete}
+            title={"Product"}
+          />
+        </Card>
+      )}
+    </>
   );
 }

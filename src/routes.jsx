@@ -11,6 +11,7 @@ import { Tables } from "@/pages/dashboard/tables";
 import { SignIn, SignUp } from "@/pages/auth";
 import { SortableTable } from "./pages/dashboard/sortabletable";
 import { ProductEditScreen } from "./pages/dashboard/ProductEditScreen";
+import { AddProduct } from "./pages/dashboard/Addproduct";
 
 const icon = {
   className: "w-5 h-5 text-inherit",
@@ -40,22 +41,28 @@ export const routes = [
       },
       {
         icon: <TableCellsIcon {...icon} />,
-        name: "sorttables",
+        name: "User",
         path: "/sorttables",
         element: <SortableTable/>,
       },
       {
         icon: <TableCellsIcon {...icon} />,
-        name: "ProductForm",
+        name: "Edit-Product",
         path: "/editproduct",
         element: <ProductEditScreen/>,
       },
       {
-        icon: <BellIcon {...icon} />,
-        name: "notifactions",
-        path: "/notifactions",
-        element: <Notifications />,
+        icon: <TableCellsIcon {...icon} />,
+        name: "Add-Product",
+        path: "/add-product",
+        element: <AddProduct/>,
       },
+      // {
+      //   icon: <BellIcon {...icon} />,
+      //   name: "notifactions",
+      //   path: "/notifactions",
+      //   element: <Notifications />,
+      // },
     ],
   },
   {

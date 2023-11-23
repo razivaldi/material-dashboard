@@ -11,7 +11,8 @@ const auth_reducer = (state, action) => {
           userId: action.payload.userId,
           token: action.payload.token,
           loading: false,
-          error: ''
+          error: '',
+          role: action.payload.role
       }
 
       localStorage.setItem('userInfo', JSON.stringify(newState))

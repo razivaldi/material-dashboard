@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useContext, useReducer } from "react";
-import reducer from '@/reducers/auth_reducer'
+import reducer from "@/reducers/auth_reducer";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = React.createContext();
 
@@ -12,14 +13,20 @@ let token = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo")).token
   : "";
 
+let role = localStorage.getItem("userInfo")
+  ? JSON.parse(localStorage.getItem("userInfo")).role
+  : "";
+
 const initialState = {
   userId: userId,
   token: token,
   loading: false,
   error: "",
+  role: role,
 };
 
 export const AuthProvider = ({ children }) => {
+  const navigate = useNavigate();
   const [userState, dispatch] = useReducer(reducer, initialState);
 
   const login = (email, password) => {
@@ -31,7 +38,12 @@ export const AuthProvider = ({ children }) => {
       .post(`http://localhost:8000/auth/login`, userData)
       .then((resp) => {
         dispatch({ type: "USER_LOGIN_SUCCESS", payload: resp.data });
-        console.log(resp.data);
+        console.log(resp.data.role);
+        if (resp.data.role === "admin") {
+          navigate("/dashboard/home");
+        } else if (resp.data.role === "user") {
+          window.location.href = "http://localhost:3000/";
+        }
       })
       .catch((err) => {
         dispatch({ type: "USER_LOGIN_FAIL", payload: err.response.message });
@@ -44,11 +56,11 @@ export const AuthProvider = ({ children }) => {
 
   const register = (data) => {
     dispatch({ type: "USER_REGISTER_REQUEST" });
-     axios
+    axios
       .post(`http://localhost:8000/auth/signup`, data)
       .then((resp) => {
         dispatch({ type: "USER_REGISTER_SUCCESS", payload: resp.data.message });
-        alert(resp.data.message)
+        alert(resp.data.message);
       })
       .catch((err) => {
         dispatch({
