@@ -147,6 +147,9 @@ export function SortableTable() {
   return (
     <>
       {!userState.role && <Card className="h-full w-full text-center"> Please Login</Card>}
+      {userState.role === "user" && (
+         <Card className="h-full w-full text-center">You don't have permission</Card>
+      )}
       {userState.role === "admin" && (
         <Card className="h-full w-full">
           <div className="ml-4 flex shrink-0 flex-col gap-2 sm:flex-row">

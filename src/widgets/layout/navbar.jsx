@@ -50,7 +50,7 @@ export function Navbar({ brandName, routes, action }) {
             variant="small"
             className="mr-4 ml-2 cursor-pointer py-1.5 font-bold"
           >
-            {brandName}
+            {/* {brandName} */}
           </Typography>
         </Link>
         <div className="hidden lg:block">{navList}</div>
@@ -83,14 +83,14 @@ export function Navbar({ brandName, routes, action }) {
 }
 
 Navbar.defaultProps = {
-  brandName: "Material Tailwind React",
+  // brandName: "Material Tailwind React",
   action: (
     <a
-      href="https://www.creative-tim.com/product/material-tailwind-dashboard-react"
+      href="#"
       target="_blank"
     >
       <Button variant="gradient" size="sm" fullWidth>
-        free download
+        Please sign in
       </Button>
     </a>
   ),

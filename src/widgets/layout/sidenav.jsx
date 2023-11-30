@@ -30,12 +30,12 @@ export function Sidenav({ brandImg, brandName, routes }) {
         }`}
       >
         <Link to="/" className="flex items-center gap-4 py-6 px-8">
-          <Avatar src={brandImg} size="sm" />
+          {/* <Avatar src={brandImg} size="sm" /> */}
           <Typography
             variant="h6"
             color={sidenavType === "dark" ? "white" : "blue-gray"}
           >
-            {brandName}
+            {/* {brandName} */}
           </Typography>
         </Link>
         <IconButton

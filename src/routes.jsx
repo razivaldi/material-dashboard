@@ -12,6 +12,7 @@ import { SignIn, SignUp } from "@/pages/auth";
 import { SortableTable } from "./pages/dashboard/sortabletable";
 import { ProductEditScreen } from "./pages/dashboard/ProductEditScreen";
 import { AddProduct } from "./pages/dashboard/Addproduct";
+import Orders from "./pages/dashboard/Orders";
 
 const icon = {
   className: "w-5 h-5 text-inherit",
@@ -29,20 +30,20 @@ export const routes = [
       },
       {
         icon: <UserCircleIcon {...icon} />,
-        name: "profile",
-        path: "/profile",
-        element: <Profile />,
+        name: "Orders",
+        path: "/Orders",
+        element: <Orders />,
       },
       {
         icon: <TableCellsIcon {...icon} />,
         name: "Products",
-        path: "/tables",
+        path: "/products",
         element: <Tables/>,
       },
       {
         icon: <TableCellsIcon {...icon} />,
-        name: "User",
-        path: "/sorttables",
+        name: "Users",
+        path: "/users",
         element: <SortableTable/>,
       },
       {

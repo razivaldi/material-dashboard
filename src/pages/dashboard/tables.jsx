@@ -52,7 +52,7 @@ export function Tables() {
       cell: (record) => (
         <div className="flex items-center gap-3">
           <Avatar
-            src={`http://localhost:8000/${record.imageUrl[0]}`}
+            src={`${import.meta.env.VITE_IMG_URL}/${record.imageUrl[0]}`}
             alt={name}
             size="sm"
           />
@@ -89,13 +89,15 @@ export function Tables() {
       name: "Colors",
       selector: (row) =>
         row.colors.map((c) => {
-          return (
-            <div
-              key={c}
-              style={{ backgroundColor: c }}
-              className="m-1 inline-flex h-5 w-5 rounded-full border border-black"
-            ></div>
-          );
+          if (c !== "") {
+            return (
+              <div
+                key={c}
+                style={{ backgroundColor: c }}
+                className="m-1 inline-flex h-5 w-5 rounded-full border border-black"
+              ></div>
+            );
+          }
         }),
       sortable: true,
     },
@@ -122,7 +124,6 @@ export function Tables() {
           <IconButton
             variant="text"
             onClick={() => {
-              alert(record);
               navigate(`/dashboard/editproduct`, {
                 state: { product: record },
               });
@@ -159,11 +160,14 @@ export function Tables() {
     deleteSomeProducts(productId);
     console.log(productId);
   };
-  console.log(userState);
+  console.log(products);
 
   return (
     <>
       {!userState.role && <Card className="h-full w-full text-center">Please Login</Card>}
+      {userState.role === "user" && (
+         <Card className="h-full w-full text-center">You don't have permission</Card>
+      )}
       {userState.role === "admin" && (
         <Card className="h-full w-full">
           <div className="ml-4 flex shrink-0 flex-col gap-2 sm:flex-row">

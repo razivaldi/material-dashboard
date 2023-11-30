@@ -35,14 +35,14 @@ export const AuthProvider = ({ children }) => {
     const userData = { email: email, password: password };
 
     axios
-      .post(`http://localhost:8000/auth/login`, userData)
+      .post(`${import.meta.env.VITE_AUTH_URL}/login`, userData)
       .then((resp) => {
         dispatch({ type: "USER_LOGIN_SUCCESS", payload: resp.data });
         console.log(resp.data.role);
         if (resp.data.role === "admin") {
           navigate("/dashboard/home");
         } else if (resp.data.role === "user") {
-          window.location.href = "http://localhost:3000/";
+          window.location.href = "https://ecom.aldiverse.com/";
         }
       })
       .catch((err) => {
@@ -52,12 +52,13 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     dispatch({ type: "USER_LOGOUT" });
+    navigate("/dashboard/home");
   };
 
   const register = (data) => {
     dispatch({ type: "USER_REGISTER_REQUEST" });
     axios
-      .post(`http://localhost:8000/auth/signup`, data)
+      .post(`${import.meta.env.VITE_AUTH_URL}/signup`, data)
       .then((resp) => {
         dispatch({ type: "USER_REGISTER_SUCCESS", payload: resp.data.message });
         alert(resp.data.message);
@@ -67,6 +68,7 @@ export const AuthProvider = ({ children }) => {
           type: "USER_REGISTER_FAIL",
           payload: err.response.data.message,
         });
+        alert(err.response.data.message);
       });
   };
 

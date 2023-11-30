@@ -19,6 +19,7 @@ import { ProductsProvider } from "./context/products_context";
 import "../public/css/tailwind.css";
 import { UsersProvider } from "./context/users_context";
 import { AuthProvider } from "./context/auth_context";
+import { OrdersProvider } from "./context/orders_context";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -28,7 +29,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <AuthProvider>
             <ProductsProvider>
               <UsersProvider>
-                <App />
+                <OrdersProvider>
+                  <App />
+                </OrdersProvider>
               </UsersProvider>
             </ProductsProvider>
           </AuthProvider>

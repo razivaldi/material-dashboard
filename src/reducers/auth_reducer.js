@@ -29,7 +29,7 @@ const auth_reducer = (state, action) => {
       
       localStorage.setItem('userInfo', '')
 
-      return {...state, userId: '', token: ''}
+      return {...state, userId: '', token: '', role: ''}
   }
 
   if (action.type === 'USER_REGISTER_REQUEST') {

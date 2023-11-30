@@ -84,7 +84,7 @@ export const ProductsProvider = ({ children }) => {
       const products = response.data
       dispatch({ type: DELETE_PRODUCTS_SUCCESS, payload: products })
       await fetchProducts()
-      navigate('/dashboard/tables')
+      navigate('/dashboard/products')
     } catch (error) {
       dispatch({ type: DELETE_PRODUCTS_ERROR })
     }
@@ -97,7 +97,7 @@ export const ProductsProvider = ({ children }) => {
       const products = response.data
       dispatch({ type: DELETE_PRODUCT_SUCCESS, payload: products })
       await fetchProducts()
-      navigate('/dashboard/tables')
+      navigate('/dashboard/products')
     } catch (error) {
       dispatch({ type: DELETE_PRODUCT_ERROR })
     }
@@ -114,7 +114,7 @@ export const ProductsProvider = ({ children }) => {
       const products = response.data
       dispatch({ type: UPDATE_PRODUCT_SUCCESS, payload: products })
       await fetchProducts()
-      navigate('/dashboard/tables')
+      navigate('/dashboard/products')
     } catch (error) {
       dispatch({ type: UPDATE_PRODUCT_ERROR })
     }

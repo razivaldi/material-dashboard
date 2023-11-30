@@ -27,7 +27,7 @@ export function ProductEditScreen() {
     shipping: state?.product.shipping || false,
     featured: state?.product.featured || false,
     colors: state?.product.colors || [],
-    imageUrl:state?.product.imageUrl || '',
+    imageUrl: state?.product.imageUrl || "",
   });
 
   console.log("porduct", state);
@@ -49,7 +49,7 @@ export function ProductEditScreen() {
     formData.append("stock", data.stock);
     formData.append("shipping", data.shipping);
     formData.append("featured", data.featured);
-    formData.append("colors", data.colors);
+    formData.append("colors", JSON.stringify(data.colors));
 
     if (file) {
       formData.append("imageUrl", data.imageUrl);
@@ -61,7 +61,7 @@ export function ProductEditScreen() {
 
   return (
     <>
-     <Card color="transparent" shadow={false}>
+      <Card color="transparent" shadow={false}>
         <Typography variant="h4" color="blue-gray">
           Add Product
         </Typography>
@@ -110,13 +110,52 @@ export function ProductEditScreen() {
                 setData({ ...data, description: e.target.value })
               }
             />
+            <div className="flex flex-wrap gap-4">
+              <div className="w-30">
+                <Input
+                  label="Colors-1"
+                  name="colors"
+                  value={data.colors[0]}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      colors: [e.target.value, data.colors[1], data.colors[2]],
+                    })
+                  }
+                />
+              </div>
+              <div className="w-30">
+                <Input
+                  label="Colors-2"
+                  name="colors"
+                  value={data.colors[1]}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      colors: [data.colors[0], e.target.value, data.colors[2]],
+                    })
+                  }
+                />
+              </div>
+              <div className="w-30">
+                <Input
+                  label="Colors-3"
+                  name="colors"
+                  value={data.colors[2]}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      colors: [data.colors[0], data.colors[1], e.target.value],
+                    })
+                  }
+                />
+              </div>
+            </div>
             <div>
               <Checkbox
                 id="featured"
                 checked={data.featured}
-                onChange={() =>
-                  setData({ ...data, featured: !data.featured })
-                }
+                onChange={() => setData({ ...data, featured: !data.featured })}
               />
               <label htmlFor="featured" className="cursor-pointer">
                 Featured
@@ -124,20 +163,20 @@ export function ProductEditScreen() {
               <Checkbox
                 id="shipping"
                 checked={data.shipping}
-                onChange={() =>
-                  setData({ ...data, shipping: !data.shipping })
-                }
+                onChange={() => setData({ ...data, shipping: !data.shipping })}
               />
               <label htmlFor="shipping" className="cursor-pointer">
                 Shipping
               </label>
             </div>
+
             <input type="file" onChange={handleChange} />
+
             <img
               className="w-1/2 rounded-lg object-cover object-center"
               src={
                 file === null
-                  ? `http://localhost:8000/${data.imageUrl[0]}`
+                  ? `${import.meta.env.VITE_IMG_URL}/${data.imageUrl[0]}`
                   : file
               }
             />
