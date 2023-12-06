@@ -2,6 +2,7 @@
   "name": "material-tailwind-dashboard-react",
   "private": true,
   "version": "2.0.1",
+  "homepage": "https://dashboard.aldiverse.com/",
   "type": "module",
   "scripts": {
     "dev": "vite",
